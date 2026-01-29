@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Limitless Growth</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-color: #f4f6f8;
+        --text-dark: #1a202c;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-dark);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* --- ANIMATIONS --- */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* --- VIEW CONTROLLER --- */
+      .view-container {
+        width: 100%;
+        min-height: 100vh;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .view-container.active { display: flex; }
+
+      /* --- LOGIN --- */
+      #login-view { justify-content: center; }
+      .login-box {
+        background: var(--white);
+        padding: 40px 30px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      }
+      .login-input {
+        width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px;
+        font-size: 1rem; margin-bottom: 15px; background: #f8fafc; box-sizing: border-box;
+      }
+      .btn-primary {
+        width: 100%; padding: 14px; background: var(--text-dark); color: white;
+        border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s;
+      }
+
+      /* --- APP HEADER --- */
+      header { text-align: center; margin-bottom: 20px; width: 100%; max-width: 800px; position: relative; }
+      
+      .logout-mini {
+        position: absolute; top: 0; right: 0; background: none; border: none;
+        color: #cbd5e0; font-size: 1.2rem; padding: 10px; cursor: pointer;
+      }
+
+      h1 { font-size: 2.2rem; margin: 5px 0; font-weight: 800; color: var(--text-dark); }
+
+      /* --- NAV PILLS --- */
+      .nav-wrapper { display: flex; justify-content: center; margin-bottom: 25px; }
+      .nav-pill {
+        background: white; padding: 6px; border-radius: 16px;
+        display: flex; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+      .nav-btn {
+        border: none; background: transparent; padding: 10px 24px; border-radius: 12px;
+        font-weight: 600; color: #718096; cursor: pointer; transition: 0.2s;
+      }
+      .nav-btn.active { background: var(--text-dark); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+      /* --- GRID --- */
+      .grid-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px; width: 100%; max-width: 900px; padding-bottom: 60px;
+        padding-left: 10px; padding-right: 10px; box-sizing: border-box;
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 25px 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+        border-top: 5px solid #ccc; /* Will be overridden by theme */
+        cursor: pointer;
+        display: flex; flex-direction: column; text-align: center;
+        transition: transform 0.2s;
+        animation: fadeInUp 0.4s ease-out;
+      }
+      .card:active { transform: scale(0.97); }
+
+      .icon-box {
+        width: 50px; height: 50px; border-radius: 12px; margin: 0 auto 15px auto;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; color: white;
+      }
+      
+      .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--text-dark); font-weight: 700; }
+      .card p { font-size: 0.95rem; color: #4a5568; line-height: 1.5; margin: 0; }
+
+      /* --- DATA-DRIVEN THEMES (8 COLORS) --- */
+      /* Theme 1: Ocean Blue */
+      .Theme1 { border-top-color: #3182ce !important; } 
+      .Theme1 .icon-box { background-color: #3182ce !important; }
+
+      /* Theme 2: Growth Green */
+      .Theme2 { border-top-color: #38a169 !important; } 
+      .Theme2 .icon-box { background-color: #38a169 !important; }
+
+      /* Theme 3: Energy Orange */
+      .Theme3 { border-top-color: #dd6b20 !important; } 
+      .Theme3 .icon-box { background-color: #dd6b20 !important; }
+
+      /* Theme 4: Focus Red */
+      .Theme4 { border-top-color: #e53e3e !important; } 
+      .Theme4 .icon-box { background-color: #e53e3e !important; }
+
+      /* Theme 5: Royal Purple */
+      .Theme5 { border-top-color: #805ad5 !important; } 
+      .Theme5 .icon-box { background-color: #805ad5 !important; }
+
+      /* Theme 6: Arctic Teal */
+      .Theme6 { border-top-color: #319795 !important; } 
+      .Theme6 .icon-box { background-color: #319795 !important; }
+
+      /* Theme 7: Rose Harmony */
+      .Theme7 { border-top-color: #d53f8c !important; } 
+      .Theme7 .icon-box { background-color: #d53f8c !important; }
+
+      /* Theme 8: Amber Glow */
+      .Theme8 { border-top-color: #d69e2e !important; } 
+      .Theme8 .icon-box { background-color: #d69e2e !important; }
+
+      /* Special Case for Philosophy */
+      .style-philosophy { border-top-color: #6b46c1 !important; }
+      .style-philosophy .icon-box { background: linear-gradient(135deg, #6b46c1, #b794f4) !important; }
+
+      /* --- BOLD TEXT COLORING (Matches Theme) --- */
+      .card strong { font-weight: 700; }
+
+      .Theme1 strong { color: #2b6cb0; }
+      .Theme2 strong { color: #2f855a; }
+      .Theme3 strong { color: #c05621; }
+      .Theme4 strong { color: #c53030; }
+      .Theme5 strong { color: #6b46c1; }
+      .Theme6 strong { color: #2c7a7b; }
+      .Theme7 strong { color: #b83280; }
+      .Theme8 strong { color: #b7791f; }
+      
+      .style-philosophy strong { 
+          background: linear-gradient(135deg, #6b46c1, #b794f4);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+
+      /* --- TRACKER --- */
+      .tracker-section {
+        background: white; padding: 10px 20px; border-radius: 30px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.04); display: inline-flex;
+        align-items: center; gap: 10px; margin-bottom: 10px;
+      }
+      .day-circle {
+        width: 30px; height: 30px; border-radius: 50%; border: 2px solid #e2e8f0;
+        display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+      }
+      .day-circle.done { background: #38a169; border-color: #38a169; color: white; }
+      .day-circle.today { border-color: #3182ce; border-width: 2px; }
+
+      /* --- SLIDESHOW --- */
+      #slideshow-modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(26, 32, 44, 0.98); z-index: 2000;
+        display: none; flex-direction: column; align-items: center; justify-content: center;
+        padding: 20px; box-sizing: border-box;
+      }
+
+      #slide-card {
+        background: var(--white);
+        width: 90%; max-width: 450px; padding: 40px 30px; 
+        border-radius: 20px; text-align: center; position: relative;
+        display: flex; flex-direction: column; justify-content: center;
+        min-height: 380px; overflow: hidden;
+        box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .slide-progress-bar {
+        position: absolute; top: 0; left: 0; height: 6px;
+        background: #38a169; width: 0%; transition: width 0.3s linear;
+      }
+
+      .controls-wrapper { margin-top: 30px; display: flex; gap: 20px; }
+      .control-btn {
+        width: 60px; height: 60px; border-radius: 50%; border: none;
+        font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: 0.2s;
+      }
+      .btn-stop { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); }
+      .btn-play { background: white; color: black; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+
+    </style>
+  </head>
+  <body>
+    
+    <div id="login-view" class="view-container active">
+      <div class="login-box">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🔐</div>
+        <h2>Secure Access</h2>
+        <input type="text" id="uid" class="login-input" placeholder="User ID" />
+        <input type="password" id="pass" class="login-input" placeholder="Password" onkeypress="handleEnter(event)" />
+        <button id="loginBtn" class="btn-primary" onclick="attemptLogin()">Login</button>
+        <div id="loginError" style="color: #e53e3e; margin-top: 15px; display: none;">Invalid Credentials</div>
+      </div>
+    </div>
+
+    <div id="app-view" class="view-container">
+      <button class="logout-mini" onclick="logout()"><i class="fa-solid fa-power-off"></i></button>
+      
+      <header>
+        <div class="tracker-section">
+          <span style="font-weight:700; color:#a0aec0; font-size:0.75rem;">STREAK</span>
+          <div id="tracker-dots" style="display:flex; gap:5px;"></div>
+        </div>
+        <h1>Limitless Growth</h1>
+      </header>
+
+      <div class="nav-wrapper">
+        <div class="nav-pill">
+          <button class="nav-btn active" onclick="switchCategory('Principles')">Principles</button>
+          <button class="nav-btn" onclick="switchCategory('Affirmations')">Affirmations</button>
+        </div>
+      </div>
+      
+      <div id="data-loader" style="margin-top:50px; display:none; text-align:center;">
+        <i class="fa-solid fa-circle-notch fa-spin fa-2x" style="color: #3182ce"></i>
+      </div>
+
+      <div id="content-grid" class="grid-container"></div>
+    </div>
+
+    <div id="slideshow-modal">
+      <div id="slide-card">
+        <div class="slide-progress-bar" id="slide-progress"></div>
+        <div style="position: absolute; top: 20px; right: 25px; color: #cbd5e0; font-weight: 700; font-size: 0.9rem;" id="slide-counter">1/10</div>
+        <div id="slide-body"></div>
+      </div>
+      
+      <div class="controls-wrapper">
+         <button class="control-btn btn-stop" onclick="endSlideshow()"><i class="fa-solid fa-xmark"></i></button>
+         <button class="control-btn btn-play" id="playPauseBtn" onclick="togglePause()"><i class="fa-solid fa-pause"></i></button>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "https://script.google.com/macros/s/AKfycbw-TOyNMzK9EvUxRdE73mXSvcgrkcGO4XBQiJ266G0gLKj8i3Omy50KfCwbmZucXbJWNw/exec";
+
+      let appData = [], currentCategory = "Principles", activeSlides = [], slideIndex = 0;
+      let isSlideshowActive = false, isPaused = false, synth = window.speechSynthesis;
+      let wakeLock = null;
+
+      // --- WAKE LOCK ---
+      async function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+          try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {});
+          } catch (err) { console.log(err); }
+        }
+      }
+      function releaseWakeLock() {
+        if (wakeLock !== null) { wakeLock.release(); wakeLock = null; }
+      }
+      document.addEventListener("visibilitychange", async () => {
+        if (wakeLock !== null && document.visibilityState === "visible" && isSlideshowActive) { await requestWakeLock(); }
+      });
+
+      function stripHtml(html) {
+         let tmp = document.createElement("DIV"); tmp.innerHTML = html;
+         return tmp.textContent || tmp.innerText || "";
+      }
+
+      // --- THEME LOGIC ---
+      function getCycleClass(index, item) {
+        if (item.theme && item.theme.startsWith("Theme")) {
+            return item.theme.split(" ")[0];
+        }
+        if (item.title && item.title.trim() === "Philosophy") return "style-philosophy";
+        const cycleIndex = (index % 8) + 1;
+        return `Theme${cycleIndex}`;
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (document.getElementById("login-view").classList.contains("active")) return;
+        if (e.key === "Escape") endSlideshow();
+        if (isSlideshowActive) {
+            if (e.key === " " || e.key === "Spacebar") togglePause();
+            return;
+        }
+        if (e.key === "ArrowLeft") switchCategory("Principles");
+        if (e.key === "ArrowRight") switchCategory("Affirmations");
+        if (e.key === "1" && appData.length > 0) startSlideshow(0);
+      });
+
+      async function attemptLogin() {
+        const uid = document.getElementById("uid").value;
+        const pass = document.getElementById("pass").value;
+        const btn = document.getElementById("loginBtn");
+        btn.innerText = "...";
+        try {
+          const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "login", userId: uid, password: pass }) });
+          const data = await res.json();
+          if (data.result === "success") {
+            localStorage.setItem("user_session", "active");
+            enterApp();
+          } else {
+            document.getElementById("loginError").style.display = "block";
+            btn.innerText = "Login";
+          }
+        } catch (e) { alert("Connection Error"); btn.innerText = "Login"; }
+      }
+
+      function enterApp() {
+        document.getElementById("login-view").classList.remove("active");
+        document.getElementById("app-view").classList.add("active");
+        loadContent();
+      }
+
+      async function loadContent() {
+        const cached = localStorage.getItem("app_data_v11"); 
+        if (cached) { appData = JSON.parse(cached); renderApp(); }
+        else { document.getElementById("data-loader").style.display = "block"; }
+
+        try {
+          const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "getContent" }) });
+          const response = await res.json();
+          if (response.result === "success") {
+            appData = response.data;
+            localStorage.setItem("app_data_v11", JSON.stringify(appData));
+            if(response.logs) {
+                let pLog = [], aLog = [];
+                response.logs.forEach(l => {
+                    if(l.includes("Principles")) pLog.push(l.split("_")[0]);
+                    if(l.includes("Affirmations")) aLog.push(l.split("_")[0]);
+                });
+                localStorage.setItem("log_Principles", JSON.stringify(pLog));
+                localStorage.setItem("log_Affirmations", JSON.stringify(aLog));
+            }
+            renderApp();
+            document.getElementById("data-loader").style.display = "none";
+          }
+        } catch (e) {}
+      }
+
+      function renderApp() {
+        const grid = document.getElementById("content-grid");
+        grid.innerHTML = "";
+        const filtered = appData.filter(item => item.category === currentCategory);
+        document.querySelector("h1").innerText = currentCategory;
+
+        filtered.forEach((item, index) => {
+          const card = document.createElement("div");
+          const themeClass = getCycleClass(index, item);
+          
+          card.className = `card ${themeClass}`;
+          card.onclick = () => startSlideshow(index);
+          const cleanBody = stripHtml(item.body);
+          
+          card.innerHTML = `
+                <div class="icon-box"><i class="${item.icon}"></i></div>
+                <h3>${item.title}</h3>
+                <p>${cleanBody}</p>
+            `;
+          grid.appendChild(card);
+        });
+        renderTracker();
+      }
+
+      function switchCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll(".nav-btn").forEach(b => {
+            b.classList.remove("active");
+            if(b.innerText === cat) b.classList.add("active");
+        });
+        renderApp();
+      }
+
+      function renderTracker() {
+        const container = document.getElementById("tracker-dots");
+        container.innerHTML = "";
+        const todayStr = new Date().toISOString().split("T")[0];
+        const log = JSON.parse(localStorage.getItem(`log_${currentCategory}`)) || [];
+        
+        for(let i=4; i>=0; i--) {
+            const d = new Date(); d.setDate(d.getDate() - i);
+            const dStr = d.toISOString().split("T")[0];
+            const div = document.createElement("div");
+            div.className = `day-circle ${log.includes(dStr) ? 'done' : ''} ${dStr === todayStr ? 'today' : ''}`;
+            div.innerHTML = log.includes(dStr) ? '<i class="fa-solid fa-check"></i>' : '';
+            container.appendChild(div);
+        }
+      }
+
+      function startSlideshow(index) {
+        requestWakeLock();
+        activeSlides = appData.filter(item => item.category === currentCategory);
+        slideIndex = index;
+        isSlideshowActive = true; isPaused = false;
+        
+        document.getElementById("slideshow-modal").style.display = "flex";
+        runSlide();
+      }
+
+      function runSlide() {
+        if (!isSlideshowActive) return;
+        document.getElementById("slide-progress").style.width = `${((slideIndex) / activeSlides.length) * 100}%`;
+
+        // --- AUTOMATIC TRANSITION LOGIC START ---
+        if (slideIndex >= activeSlides.length) {
+            logCompletion(); // Log current category
+
+            // If we just finished Principles, automatically switch to Affirmations
+            if (currentCategory === "Principles") {
+                const transitionMsg = "Principles completed. Starting Affirmations.";
+                const u = new SpeechSynthesisUtterance(transitionMsg);
+                u.rate = 0.9;
+                
+                // When speaking finishes, switch categories and restart
+                u.onend = () => {
+                    switchCategory("Affirmations");
+                    // Reload active slides for the new category
+                    activeSlides = appData.filter(item => item.category === "Affirmations");
+                    slideIndex = 0; // Reset index
+                    
+                    // Update visual counter for smooth transition
+                    document.getElementById("slide-counter").innerText = `1 / ${activeSlides.length}`;
+                    
+                    // Start next slide
+                    runSlide();
+                };
+                synth.speak(u);
+                return;
+            }
+
+            // Otherwise, end slideshow normally
+            endSlideshow(); 
+            return;
+        }
+        // --- AUTOMATIC TRANSITION LOGIC END ---
+
+        const item = activeSlides[slideIndex];
+        const card = document.getElementById("slide-card");
+        
+        card.className = ""; void card.offsetWidth; 
+        
+        const themeClass = getCycleClass(slideIndex, item);
+        card.className = themeClass;
+        
+        card.style.animation = "fadeInUp 0.4s ease-out";
+
+        document.getElementById("slide-counter").innerText = `${slideIndex + 1} / ${activeSlides.length}`;
+        document.getElementById("slide-body").innerHTML = `
+            <div class="icon-box" style="transform:scale(1.2); margin-bottom:25px;"><i class="${item.icon}"></i></div>
+            <h3 style="font-size:1.5rem; margin-bottom:15px;">${item.title}</h3>
+            <p style="font-size:1.15rem; line-height:1.6; color:#2d3748;">${item.body}</p>
+        `;
+
+        const cleanText = item.title + ". " + stripHtml(item.body);
+        speak(cleanText);
+      }
+
+      function speak(text) {
+        if (!isSlideshowActive) return;
+        synth.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.9;
+        u.onend = () => { if (isSlideshowActive && !isPaused) { slideIndex++; setTimeout(runSlide, 800); } };
+        synth.speak(u);
+      }
+
+      function togglePause() {
+        isPaused = !isPaused;
+        const btn = document.getElementById("playPauseBtn");
+        if (isPaused) { synth.pause(); btn.innerHTML = '<i class="fa-solid fa-play"></i>'; } 
+        else { synth.resume(); btn.innerHTML = '<i class="fa-solid fa-pause"></i>'; }
+      }
+
+      function endSlideshow() {
+        isSlideshowActive = false; synth.cancel(); 
+        releaseWakeLock(); 
+        document.getElementById("slideshow-modal").style.display = "none";
+        renderTracker();
+      }
+
+      function logCompletion() {
+        const todayStr = new Date().toISOString().split("T")[0];
+        let log = JSON.parse(localStorage.getItem(`log_${currentCategory}`)) || [];
+        if (!log.includes(todayStr)) {
+          log.push(todayStr);
+          localStorage.setItem(`log_${currentCategory}`, JSON.stringify(log));
+          fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "log", date: todayStr, type: currentCategory }) }).catch(()=>{});
+        }
+      }
+
+      function logout() { localStorage.removeItem("user_session"); location.reload(); }
+      function handleEnter(e) { if(e.key === "Enter") attemptLogin(); }
+
+      if(localStorage.getItem("user_session") === "active") enterApp();
+    </script>
+  </body>
+</html>
